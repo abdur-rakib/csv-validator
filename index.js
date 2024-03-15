@@ -1,7 +1,7 @@
 const fs = require("fs");
 const csv = require("csv-parser");
 
-const directoryPath = "./input";
+const directoryPath = "./input/";
 
 const expectedHeaders = [
   "event_id",
@@ -27,6 +27,10 @@ const partnerIds = [
 
 const seenOrderIds = new Set();
 
+let totalRowCount = 0;
+let totalInvalidRowCount = 0;
+let totalValidRowCount = 0;
+
 function validateHeader(header) {
   console.log("Validating header...");
   for (let i = 0; i < expectedHeaders.length; i++) {
@@ -44,11 +48,14 @@ function validateHeader(header) {
 }
 
 function validateCSVRow(row) {
-  console.log(`Validating order ${row.order_id}...`);
+  totalRowCount++;
+  console.log(`Validating row ${row.order_id}...`);
+
   if (seenOrderIds.has(row.order_id)) {
     console.error(
       `Validation failed for 'order_id' column in row ${row.order_id}. Duplicate order_id '${row.order_id}'.`
     );
+    totalInvalidRowCount++;
     return false;
   } else {
     seenOrderIds.add(row.order_id);
@@ -112,6 +119,7 @@ function validateCSVRow(row) {
     return false;
   }
 
+  totalValidRowCount++;
   console.log(`Validation successful for row ${row.order_id}.`);
   return true;
 }
@@ -123,7 +131,6 @@ fs.readdir(directoryPath, (err, files) => {
   }
 
   files.forEach((file) => {
-    console.log("Validating file: ", file);
     fs.createReadStream(`${directoryPath}/${file}`)
       .pipe(csv())
       .on("headers", (headers) => {
@@ -137,6 +144,11 @@ fs.readdir(directoryPath, (err, files) => {
             })
             .on("end", () => {
               console.log(`Validation completed for file '${file}'.`);
+              console.table({
+                "Total Rows": totalRowCount,
+                "Total Invalid Rows": totalInvalidRowCount,
+                "Total Valid Rows": totalValidRowCount,
+              });
             });
         } else {
           console.error(
