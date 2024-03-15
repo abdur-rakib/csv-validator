@@ -1,6 +1,1 @@
 event_id,order_id,autorenewal,msisdn,request_date,processing_date,partner_id_1,partner_product_id_1,validity
-sb_ott_failed_txns_20240211,sb_ott_failed_txns_20240211_1,N,8801719861558,2024-01-29T08:35:27,2024-02-11T12:00:00,chorki,CK30D121222GP,30
-sb_ott_failed_txns_20240211,sb_ott_failed_txns_20240211_2,N,8801719861558,2024-01-29T08:35:27,2024-02-11T12:00:00,hoichoi,GPAPI30DAYS,30
-sb_ott_failed_txns_20240211,sb_ott_failed,N,8801710227763,2024-02-01T20:40:55,2024-02-11T12:00:00,chorki,CK30D121222GP,30
-sb_ott_failed_txns_20240211,sb_ott_failed_txns_20240211_3,N,8801710227763,2024-02-01T20:40:55,2024-02-11T12:00:00,hoichoi,GPAPI30DAYS,30
-sb_ott_failed_txns_20240211,sb_ott_failed_txns_20240211_5,N,8801756433433,2024-01-29T00:34:25,2024-02-11T12:00:00,t-sports,IPL23MONPASS,30
