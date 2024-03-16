@@ -23,6 +23,7 @@ const partnerIds = [
   "t-sports",
   "i-screen",
   "rabbithole",
+  "sonyliv",
 ];
 
 const seenOrderIds = new Set();
@@ -49,11 +50,11 @@ function validateHeader(header) {
 
 function validateCSVRow(row) {
   totalRowCount++;
-  console.log(`Validating row ${row.order_id}...`);
+  console.log(`Validating row ${totalRowCount}...`);
 
   if (seenOrderIds.has(row.order_id)) {
     console.error(
-      `Validation failed for 'order_id' column in row ${row.order_id}. Duplicate order_id '${row.order_id}'.`
+      `Validation failed for 'order_id' column in row ${totalRowCount}. Duplicate order_id '${row.order_id}'.`
     );
     totalInvalidRowCount++;
     return false;
@@ -63,64 +64,64 @@ function validateCSVRow(row) {
 
   if (!row.event_id.match(/^\w{11,30}$/)) {
     console.error(
-      `Validation failed for 'event_id' column in row ${row.order_id}. Value must be between 11 and 30 characters.`
+      `Validation failed for 'event_id' column in row ${totalRowCount}. Value must be between 11 and 30 characters.`
     );
     return false;
   }
 
   if (!row.order_id.match(/^\w{11,30}$/)) {
     console.error(
-      `Validation failed for 'order_id' column in row ${row.order_id}. Value must be between 11 and 30 characters.`
+      `Validation failed for 'order_id' column in row ${totalRowCount}. Value must be between 11 and 30 characters.`
     );
     return false;
   }
 
   if (row.autorenewal !== "N") {
     console.error(
-      `Validation failed for 'autorenewal' column in row ${row.order_id}. Value must be 'N'.`
+      `Validation failed for 'autorenewal' column in row ${totalRowCount}. Value must be 'N'.`
     );
     return false;
   }
 
   if (!row.msisdn.match(/^8801\d{9}$/)) {
     console.error(
-      `Validation failed for 'msisdn' column in row ${row.order_id}. Value must be a 13-digit Bangladeshi phone number.`
+      `Validation failed for 'msisdn' column in row ${totalRowCount}. Value must be a 13-digit Bangladeshi phone number.`
     );
     return false;
   }
 
   if (!row.request_date.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/)) {
     console.error(
-      `Validation failed for 'request_date' column in row ${row.order_id}. Invalid date format.`
+      `Validation failed for 'request_date' column in row ${totalRowCount}. Invalid date format.`
     );
     return false;
   }
 
   if (!row.processing_date.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/)) {
     console.error(
-      `Validation failed for 'processing_date' column in row ${row.order_id}. Invalid date format.`
+      `Validation failed for 'processing_date' column in row ${totalRowCount}. Invalid date format.`
     );
     return false;
   }
 
   if (!partnerIds.includes(row.partner_id_1)) {
     console.error(
-      `Validation failed for 'partner_id_1' column in row ${
-        row.order_id
-      }. Value must be one of: ${partnerIds.join(", ")}.`
+      `Validation failed for 'partner_id_1' column in row ${totalRowCount}. Value must be one of: ${partnerIds.join(
+        ", "
+      )}.`
     );
     return false;
   }
 
   if (typeof row.partner_product_id_1 !== "string") {
     console.error(
-      `Validation failed for 'partner_product_id_1' column in row ${row.order_id}. Value must be a string.`
+      `Validation failed for 'partner_product_id_1' column in row ${totalRowCount}. Value must be a string.`
     );
     return false;
   }
 
   totalValidRowCount++;
-  console.log(`Validation successful for row ${row.order_id}.`);
+  console.log(`Validation successful for row ${totalRowCount}.`);
   return true;
 }
 
@@ -146,8 +147,8 @@ fs.readdir(directoryPath, (err, files) => {
               console.log(`Validation completed for file '${file}'.`);
               console.table({
                 "Total Rows": totalRowCount,
-                "Total Invalid Rows": totalInvalidRowCount,
                 "Total Valid Rows": totalValidRowCount,
+                "Total Invalid Rows": totalRowCount - totalValidRowCount,
               });
             });
         } else {
